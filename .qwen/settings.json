@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir *)",
+      "Bash(dotnet *)",
+      "Bash(msbuild *)",
+      "Bash(where *)",
+      "Bash(dir *)",
+      "Bash(del *)",
+      "Bash(sc *)",
+      "Bash(findstr *)",
+      "Bash(taskkill *)",
+      "Bash(timeout *)"
+    ]
+  },
+  "$version": 3
+}
