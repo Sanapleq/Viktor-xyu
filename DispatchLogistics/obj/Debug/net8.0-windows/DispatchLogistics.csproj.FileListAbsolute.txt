@@ -40,3 +40,4 @@ h:\Viktor xyu\DispatchLogistics\bin\Debug\net8.0-windows\runtimes\win-arm\native
 h:\Viktor xyu\DispatchLogistics\bin\Debug\net8.0-windows\runtimes\win-arm64\native\e_sqlite3.dll
 h:\Viktor xyu\DispatchLogistics\bin\Debug\net8.0-windows\runtimes\win-x64\native\e_sqlite3.dll
 h:\Viktor xyu\DispatchLogistics\bin\Debug\net8.0-windows\runtimes\win-x86\native\e_sqlite3.dll
+h:\Viktor xyu\DispatchLogistics\obj\Debug\net8.0-windows\DispatchLogistics.sourcelink.json
