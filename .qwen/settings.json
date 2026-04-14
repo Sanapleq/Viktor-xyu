@@ -10,7 +10,8 @@
       "Bash(sc *)",
       "Bash(findstr *)",
       "Bash(taskkill *)",
-      "Bash(timeout *)"
+      "Bash(timeout *)",
+      "Bash(powershell *)"
     ]
   },
   "$version": 3
