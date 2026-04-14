@@ -128,7 +128,6 @@ namespace DispatchLogistics.Forms
             this.Controls.Add(dgv);
             this.Controls.Add(filterPanel);
             this.Controls.Add(headerPanel);
-            filterPanel.BringToFront();
         }
 
         private void AddBtn(Panel p, string text, int x, int y, Color c, EventHandler click)

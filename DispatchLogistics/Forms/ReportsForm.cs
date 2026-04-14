@@ -101,7 +101,6 @@ namespace DispatchLogistics.Forms
             this.Controls.Add(tabControl);
             this.Controls.Add(periodPanel);
             this.Controls.Add(headerPanel);
-            periodPanel.BringToFront();
 
             // Автозагрузка
             BtnGenerate_Click(null, null);
@@ -134,7 +133,6 @@ namespace DispatchLogistics.Forms
 
             tab.Controls.Add(dgv);
             tab.Controls.Add(toolbar);
-            toolbar.BringToFront();
         }
 
         private void BtnGenerate_Click(object sender, EventArgs e)
