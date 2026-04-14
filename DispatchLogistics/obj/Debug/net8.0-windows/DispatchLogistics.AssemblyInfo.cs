@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DispatchLogistics")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+59ce2ad0f2df6adcfecf76eaaa21496f949163f7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+959721bcf6a5da5f5e7ba3bf0efd5e469bfe2109")]
 [assembly: System.Reflection.AssemblyProductAttribute("DispatchLogistics")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DispatchLogistics")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

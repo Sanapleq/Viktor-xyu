@@ -122,8 +122,6 @@ namespace DispatchLogistics.Forms
             this.Controls.Add(dgvClients);
             this.Controls.Add(toolbarPanel);
             this.Controls.Add(headerPanel);
-
-            toolbarPanel.BringToFront();
         }
 
         private void LoadData()

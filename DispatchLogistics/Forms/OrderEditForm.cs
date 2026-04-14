@@ -44,7 +44,7 @@ namespace DispatchLogistics.Forms
         private Button btnAddService, btnRemoveService;
 
         // Кнопки
-        private Button btnSave, btnCancel, btnRecalc;
+        private Button btnSave, btnCancel;
 
         // Текущие доп. услуги
         private List<OrderServiceModel> _orderServices = new List<OrderServiceModel>();
@@ -229,17 +229,6 @@ namespace DispatchLogistics.Forms
             txtAdjustReason.Size = new Size(500, 24);
             txtAdjustReason.Visible = false;
             gbCalc.Controls.Add(txtAdjustReason);
-
-            // Кнопка пересчёта
-            btnRecalc = new Button();
-            btnRecalc.Text = "🔄 Пересчитать";
-            btnRecalc.Location = new Point(550, 100);
-            btnRecalc.Size = new Size(180, 32);
-            UIStyleHelper.StyleButton(btnRecalc, Color.FromArgb(142, 68, 173));
-            btnRecalc.Click += (s, e) => Recalculate();
-            // Уже добавлена выше как txtFinalAmount — переместим
-            gbCalc.Controls.Add(btnRecalc);
-            btnRecalc.Visible = false; // скроем, пересчёт автоматический
 
             y += 150;
 

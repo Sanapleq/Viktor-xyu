@@ -287,7 +287,6 @@ namespace DispatchLogistics.Forms
             form.AutoScroll = true;
             panelWorkspace.Controls.Add(form);
             form.Show();
-            form.BringToFront();
         }
 
         /// <summary>
@@ -297,30 +296,44 @@ namespace DispatchLogistics.Forms
         {
             panelWorkspace.Controls.Clear();
 
+            // Основной контейнер с прокруткой
             Panel content = new Panel();
             content.Dock = DockStyle.Fill;
             content.BackColor = UIStyleHelper.BackgroundColor;
             content.Padding = new Padding(25);
+            content.AutoScroll = true;
 
-            // Заголовок
+            // ===== Заголовок =====
+            Panel headerPanel = new Panel();
+            headerPanel.Dock = DockStyle.Top;
+            headerPanel.Height = 65;
+            headerPanel.BackColor = UIStyleHelper.BackgroundColor;
+
             Label lblWelcome = new Label();
             lblWelcome.Text = string.Format("Добро пожаловать, {0}!", SessionHelper.CurrentUser.FullName);
             lblWelcome.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
             lblWelcome.ForeColor = UIStyleHelper.HeaderColor;
             lblWelcome.AutoSize = true;
-            lblWelcome.Location = new Point(25, 20);
+            lblWelcome.Location = new Point(0, 5);
+            headerPanel.Controls.Add(lblWelcome);
 
             Label lblSubtitle = new Label();
             lblSubtitle.Text = "Обзор системы диспетчерской логистики";
             lblSubtitle.Font = new Font("Segoe UI", 10F);
             lblSubtitle.ForeColor = Color.FromArgb(130, 130, 130);
             lblSubtitle.AutoSize = true;
-            lblSubtitle.Location = new Point(25, 52);
+            lblSubtitle.Location = new Point(0, 35);
+            headerPanel.Controls.Add(lblSubtitle);
 
-            content.Controls.Add(lblWelcome);
-            content.Controls.Add(lblSubtitle);
+            // ===== Контейнер карточек =====
+            FlowLayoutPanel cardsPanel = new FlowLayoutPanel();
+            cardsPanel.Dock = DockStyle.Top;
+            cardsPanel.AutoScroll = false;
+            cardsPanel.WrapContents = true;
+            cardsPanel.FlowDirection = FlowDirection.LeftToRight;
+            cardsPanel.Padding = new Padding(0, 15, 0, 15);
+            cardsPanel.BackColor = UIStyleHelper.BackgroundColor;
 
-            // Статистические карточки
             try
             {
                 DataTable counters = _reportRepo.GetDashboardCounters();
@@ -335,83 +348,101 @@ namespace DispatchLogistics.Forms
                     int newOrders = (int)row["NewOrders"];
                     int inTransit = (int)row["InTransitOrders"];
 
-                    int cardWidth = 200;
-                    int cardHeight = 100;
-                    int cardY = 90;
-                    int cardSpacing = 15;
-                    int startX = 25;
-
-                    // Карточка 1: Клиенты
-                    Panel card1 = UIStyleHelper.CreateStatCard("Клиенты", clientCount.ToString(),
-                        UIStyleHelper.PrimaryColor);
-                    card1.Location = new Point(startX, cardY);
-                    card1.Size = new Size(cardWidth, cardHeight);
-                    content.Controls.Add(card1);
-
-                    // Карточка 2: Транспорт
-                    Panel card2 = UIStyleHelper.CreateStatCard("Транспорт", transportCount.ToString(),
-                        UIStyleHelper.SuccessColor);
-                    card2.Location = new Point(startX + cardWidth + cardSpacing, cardY);
-                    card2.Size = new Size(cardWidth, cardHeight);
-                    content.Controls.Add(card2);
-
-                    // Карточка 3: Активные заказы
-                    Panel card3 = UIStyleHelper.CreateStatCard("Активные заказы", activeOrders.ToString(),
-                        UIStyleHelper.WarningColor);
-                    card3.Location = new Point(startX + (cardWidth + cardSpacing) * 2, cardY);
-                    card3.Size = new Size(cardWidth, cardHeight);
-                    content.Controls.Add(card3);
-
-                    // Карточка 4: Выручка
-                    Panel card4 = UIStyleHelper.CreateStatCard("Выручка (заверш.)",
-                        string.Format("{0:N0} ₽", totalRevenue),
-                        UIStyleHelper.PrimaryDark);
-                    card4.Location = new Point(startX + (cardWidth + cardSpacing) * 3, cardY);
-                    card4.Size = new Size(cardWidth, cardHeight);
-                    content.Controls.Add(card4);
-
-                    // Карточка 5: Новые заказы
-                    Panel card5 = UIStyleHelper.CreateStatCard("Новые заказы", newOrders.ToString(),
-                        Color.FromArgb(142, 68, 173));
-                    card5.Location = new Point(startX, cardY + cardHeight + cardSpacing);
-                    card5.Size = new Size(cardWidth, cardHeight);
-                    content.Controls.Add(card5);
-
-                    // Карточка 6: В пути
-                    Panel card6 = UIStyleHelper.CreateStatCard("В пути", inTransit.ToString(),
-                        Color.FromArgb(211, 84, 0));
-                    card6.Location = new Point(startX + cardWidth + cardSpacing, cardY + cardHeight + cardSpacing);
-                    card6.Size = new Size(cardWidth, cardHeight);
-                    content.Controls.Add(card6);
+                    // Карточки с автопереносом
+                    cardsPanel.Controls.Add(CreateDashCard("Клиенты", clientCount.ToString(), UIStyleHelper.PrimaryColor));
+                    cardsPanel.Controls.Add(CreateDashCard("Транспорт", transportCount.ToString(), UIStyleHelper.SuccessColor));
+                    cardsPanel.Controls.Add(CreateDashCard("Активные заказы", activeOrders.ToString(), UIStyleHelper.WarningColor));
+                    cardsPanel.Controls.Add(CreateDashCard("Выручка (заверш.)", string.Format("{0:N0} ₽", totalRevenue), UIStyleHelper.PrimaryDark));
+                    cardsPanel.Controls.Add(CreateDashCard("Новые заказы", newOrders.ToString(), Color.FromArgb(142, 68, 173)));
+                    cardsPanel.Controls.Add(CreateDashCard("В пути", inTransit.ToString(), Color.FromArgb(211, 84, 0)));
                 }
+            }
+            catch
+            {
+                cardsPanel.Controls.Add(CreateDashCard("Ошибка", "—", Color.Red));
+            }
 
-                // Таблица статусов заказов
-                Label lblStatusTitle = UIStyleHelper.CreateSubHeaderLabel("Статусы заказов");
-                lblStatusTitle.Location = new Point(25, 310);
-                content.Controls.Add(lblStatusTitle);
+            // ===== Таблица статусов =====
+            Panel statusPanel = new Panel();
+            statusPanel.Dock = DockStyle.Top;
+            statusPanel.Height = 220;
+            statusPanel.BackColor = UIStyleHelper.BackgroundColor;
+            statusPanel.Padding = new Padding(0, 10, 0, 0);
 
+            Label lblStatusTitle = UIStyleHelper.CreateSubHeaderLabel("Статусы заказов");
+            lblStatusTitle.Location = new Point(0, 0);
+            statusPanel.Controls.Add(lblStatusTitle);
+
+            try
+            {
                 DataTable statusData = _reportRepo.GetOrdersStatusCount();
                 if (statusData.Rows.Count > 0)
                 {
                     DataGridView dgvStatus = new DataGridView();
                     dgvStatus.DataSource = statusData;
-                    dgvStatus.Location = new Point(25, 340);
+                    dgvStatus.Location = new Point(0, 30);
                     dgvStatus.Size = new Size(350, 180);
+                    dgvStatus.Anchor = AnchorStyles.Top | AnchorStyles.Left;
                     UIStyleHelper.StyleDataGridView(dgvStatus);
-                    content.Controls.Add(dgvStatus);
+                    statusPanel.Controls.Add(dgvStatus);
                 }
             }
             catch (Exception ex)
             {
                 Label lblErr = new Label();
-                lblErr.Text = string.Format("Ошибка загрузки данных: {0}", ex.Message);
+                lblErr.Text = string.Format("Ошибка: {0}", ex.Message);
                 lblErr.ForeColor = Color.Red;
-                lblErr.Location = new Point(25, 100);
+                lblErr.Location = new Point(0, 30);
                 lblErr.AutoSize = true;
-                content.Controls.Add(lblErr);
+                statusPanel.Controls.Add(lblErr);
             }
 
+            // ===== Сборка: порядок Dock.Top снизу вверх =====
+            content.Controls.Add(statusPanel);
+            content.Controls.Add(cardsPanel);
+            content.Controls.Add(headerPanel);
             panelWorkspace.Controls.Add(content);
+        }
+
+        /// <summary>
+        /// Создаёт карточку для дашборда (адаптивный размер)
+        /// </summary>
+        private Panel CreateDashCard(string title, string value, Color accentColor)
+        {
+            Panel card = new Panel();
+            card.Width = 200;
+            card.Height = 100;
+            card.BackColor = Color.White;
+            card.Padding = new Padding(12);
+            card.Margin = new Padding(0, 0, 15, 15);
+            card.MinimumSize = new Size(180, 100);
+
+            Label lblTitle = new Label();
+            lblTitle.Text = title;
+            lblTitle.Font = new Font("Segoe UI", 9F, FontStyle.Regular);
+            lblTitle.ForeColor = Color.FromArgb(120, 120, 120);
+            lblTitle.AutoSize = false;
+            lblTitle.Size = new Size(160, 20);
+            lblTitle.Location = new Point(12, 10);
+
+            Label lblValue = new Label();
+            lblValue.Text = value;
+            lblValue.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
+            lblValue.ForeColor = accentColor;
+            lblValue.AutoSize = false;
+            lblValue.Size = new Size(160, 30);
+            lblValue.Location = new Point(12, 32);
+
+            Panel accent = new Panel();
+            accent.BackColor = accentColor;
+            accent.Width = 4;
+            accent.Dock = DockStyle.Left;
+
+            card.Controls.Add(accent);
+            card.Controls.Add(lblTitle);
+            card.Controls.Add(lblValue);
+
+            return card;
         }
 
         /// <summary>

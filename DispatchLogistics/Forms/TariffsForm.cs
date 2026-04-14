@@ -57,7 +57,6 @@ namespace DispatchLogistics.Forms
             this.Controls.Add(dgv);
             this.Controls.Add(toolbar);
             this.Controls.Add(headerPanel);
-            toolbar.BringToFront();
         }
 
         private void AddButton(Panel p, string text, int x, int y, Color c, EventHandler click)
