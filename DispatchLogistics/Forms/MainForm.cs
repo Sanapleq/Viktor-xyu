@@ -50,7 +50,7 @@ namespace DispatchLogistics.Forms
             panelSidebar.Width = 220;
             panelSidebar.Dock = DockStyle.Left;
             panelSidebar.BackColor = Color.FromArgb(44, 62, 80);
-            panelSidebar.Padding = new Padding(0, 0, 0, 0);
+            panelSidebar.Padding = new Padding(0);
 
             // Логотип в сайдбаре
             Label lblLogo = new Label();
@@ -66,12 +66,11 @@ namespace DispatchLogistics.Forms
             Panel sep1 = new Panel();
             sep1.Height = 1;
             sep1.BackColor = Color.FromArgb(60, 80, 100);
-            sep1.Location = new Point(0, 60);
             sep1.Dock = DockStyle.Top;
             panelSidebar.Controls.Add(sep1);
 
             // Кнопки меню
-            int y = 70;
+            int y = 61;
             int btnWidth = 220;
             int btnHeight = 40;
             int spacing = 2;
@@ -107,15 +106,14 @@ namespace DispatchLogistics.Forms
             Panel sep2 = new Panel();
             sep2.Height = 1;
             sep2.BackColor = Color.FromArgb(60, 80, 100);
-            sep2.Location = new Point(0, y + 10);
-            sep2.Width = 220;
+            sep2.Dock = DockStyle.Top;
+            sep2.Margin = new Padding(0, 10, 0, 10);
             panelSidebar.Controls.Add(sep2);
-            y += 20;
 
-            btnLogout = CreateMenuButton("  🚪  Выход", y, btnWidth, btnHeight);
+            btnLogout = CreateMenuButton("  🚪  Выход", y + 12, btnWidth, btnHeight);
             btnLogout.BackColor = Color.FromArgb(192, 57, 43);
 
-            // Активная кнопка по умолчанию — дашборд
+            // Активная кнопка по умолчанию
             btnCurrent = btnDashboard;
             btnCurrent.BackColor = UIStyleHelper.PrimaryColor;
 
@@ -133,15 +131,16 @@ namespace DispatchLogistics.Forms
 
             // Скрываем кнопку пользователей для диспетчера
             if (Helpers.SessionHelper.CurrentUser.Role == "Диспетчер")
-            {
                 btnUsers.Visible = false;
-                // Пересчитываем layout — просто скрываем, позиция остаётся
-            }
 
-            // ===== Верхняя панель =====
+            // ===== КОНТЕЙНЕР ПРАВОЙ ЧАСТИ (справа от sidebar) =====
+            Panel panelRightArea = new Panel();
+            panelRightArea.Dock = DockStyle.Fill;
+
+            // Верхняя панель (header)
             panelTopBar = new Panel();
-            panelTopBar.Height = 55;
             panelTopBar.Dock = DockStyle.Top;
+            panelTopBar.Height = 55;
             panelTopBar.BackColor = Color.White;
             panelTopBar.Padding = new Padding(20, 0, 20, 0);
 
@@ -150,27 +149,26 @@ namespace DispatchLogistics.Forms
             lblAppTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
             lblAppTitle.ForeColor = UIStyleHelper.HeaderColor;
             lblAppTitle.AutoSize = true;
-            lblAppTitle.Location = new Point(20, 12);
+            lblAppTitle.Location = new Point(0, 14);
 
             lblUserName = new Label();
             lblUserName.Font = new Font("Segoe UI", 10F);
             lblUserName.ForeColor = Color.FromArgb(120, 120, 120);
             lblUserName.AutoSize = true;
-            lblUserName.TextAlign = ContentAlignment.MiddleRight;
+            lblUserName.Anchor = AnchorStyles.Top | AnchorStyles.Right;
 
             lblUserRole = new Label();
             lblUserRole.Font = new Font("Segoe UI", 8.5F, FontStyle.Italic);
             lblUserRole.ForeColor = Color.FromArgb(160, 160, 160);
             lblUserRole.AutoSize = true;
-            lblUserRole.TextAlign = ContentAlignment.MiddleRight;
+            lblUserRole.Anchor = AnchorStyles.Top | AnchorStyles.Right;
 
-            // Расположение правой информации
             panelTopBar.Resize += (s, e) =>
             {
-                lblUserName.Left = panelTopBar.Width - lblUserName.Width - 25;
-                lblUserRole.Left = panelTopBar.Width - lblUserRole.Width - 25;
+                lblUserName.Left = panelTopBar.Width - lblUserName.Width - 20;
+                lblUserRole.Left = panelTopBar.Width - lblUserRole.Width - 20;
                 lblUserName.Top = 10;
-                lblUserRole.Top = 32;
+                lblUserRole.Top = 30;
             };
 
             lblUserName.Text = SessionHelper.CurrentUser.FullName;
@@ -180,25 +178,32 @@ namespace DispatchLogistics.Forms
             panelTopBar.Controls.Add(lblUserName);
             panelTopBar.Controls.Add(lblUserRole);
 
-            // Разделитель
+            // Разделитель под header
             Panel sepTop = new Panel();
+            sepTop.Dock = DockStyle.Top;
             sepTop.Height = 1;
             sepTop.BackColor = Color.FromArgb(220, 220, 220);
-            sepTop.Dock = DockStyle.Top;
             panelTopBar.Controls.Add(sepTop);
 
-            // ===== Рабочая область =====
+            // Рабочая область
             panelWorkspace = new Panel();
             panelWorkspace.Dock = DockStyle.Fill;
             panelWorkspace.BackColor = UIStyleHelper.BackgroundColor;
             panelWorkspace.AutoScroll = true;
 
-            // ===== Сборка формы =====
-            // Порядок добавления с Dock важен: первый добавленный = самый нижний (back)
-            // Sidebar (Left) → TopBar (Top) → Workspace (Fill, самый верхний)
+            // Собираем правую область: header сверху, workspace заполняет остальное
+            // ВАЖНО: при Dock-раскладке WinForms обрабатывает Controls в ОБРАТНОМ порядке.
+            // Сначала добавляем workspace (Fill), потом header (Top) — тогда header
+            // получит верхнюю полоску, а workspace заполнит оставшееся.
+            panelRightArea.Controls.Add(panelWorkspace);
+            panelRightArea.Controls.Add(panelTopBar);
+
+            // Собираем форму: sidebar слева, правая область занимает всё остальное
+            // ВАЖНО: порядок добавления определяет z-order (кто поверх кого).
+            // Сначала правая область (Fill), потом sidebar (Left) — sidebar будет слева
+            // и не будет перекрывать контент.
+            this.Controls.Add(panelRightArea);
             this.Controls.Add(panelSidebar);
-            this.Controls.Add(panelTopBar);
-            this.Controls.Add(panelWorkspace);
         }
 
         /// <summary>

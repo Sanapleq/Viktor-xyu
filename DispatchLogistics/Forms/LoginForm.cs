@@ -36,25 +36,23 @@ namespace DispatchLogistics.Forms
         {
             this.SuspendLayout();
 
-            // Основная панель
-            panelMain = new Panel();
-            panelMain.BackColor = Color.White;
-            panelMain.Dock = DockStyle.Fill;
-            panelMain.Padding = new Padding(40);
-
-            // Верхняя панель-заголовок
+            // ===== Верхняя синяя шапка =====
             panelHeader = new Panel();
-            panelHeader.BackColor = UIStyleHelper.PrimaryColor;
             panelHeader.Dock = DockStyle.Top;
-            panelHeader.Height = 80;
+            panelHeader.Height = 90;
+            panelHeader.BackColor = UIStyleHelper.PrimaryColor;
+            panelHeader.Padding = new Padding(0);
 
-            // Иконка
-            lblIcon = new Label();
+            // Иконка (слева, по центру вертикально)
+            Label lblIcon = new Label();
             lblIcon.Text = "🚚";
             lblIcon.Font = new Font("Segoe UI", 28F);
             lblIcon.ForeColor = Color.White;
-            lblIcon.AutoSize = true;
-            lblIcon.Location = new Point(40, 18);
+            lblIcon.AutoSize = false;
+            lblIcon.Size = new Size(56, 56);
+            lblIcon.Location = new Point(24, 17);
+            lblIcon.TextAlign = ContentAlignment.MiddleCenter;
+            panelHeader.Controls.Add(lblIcon);
 
             // Заголовок
             lblTitle = new Label();
@@ -62,7 +60,8 @@ namespace DispatchLogistics.Forms
             lblTitle.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
             lblTitle.ForeColor = Color.White;
             lblTitle.AutoSize = true;
-            lblTitle.Location = new Point(90, 14);
+            lblTitle.Location = new Point(92, 14);
+            panelHeader.Controls.Add(lblTitle);
 
             // Подзаголовок
             Label lblSubtitle = new Label();
@@ -70,29 +69,32 @@ namespace DispatchLogistics.Forms
             lblSubtitle.Font = new Font("Segoe UI", 10F);
             lblSubtitle.ForeColor = Color.FromArgb(180, 210, 235);
             lblSubtitle.AutoSize = true;
-            lblSubtitle.Location = new Point(90, 44);
-
-            panelHeader.Controls.Add(lblIcon);
-            panelHeader.Controls.Add(lblTitle);
+            lblSubtitle.Location = new Point(92, 48);
             panelHeader.Controls.Add(lblSubtitle);
+
+            // ===== Основная панель с формой входа =====
+            panelMain = new Panel();
+            panelMain.Dock = DockStyle.Fill;
+            panelMain.BackColor = Color.White;
+            panelMain.Padding = new Padding(40);
 
             // Метка "Логин"
             lblLogin = UIStyleHelper.CreateLabel("Логин:");
-            lblLogin.Location = new Point(40, 110);
+            lblLogin.Location = new Point(0, 10);
 
             // Поле логина
             txtLogin = UIStyleHelper.CreateTextBox();
-            txtLogin.Location = new Point(40, 135);
+            txtLogin.Location = new Point(0, 35);
             txtLogin.Size = new Size(300, 30);
             txtLogin.Font = new Font("Segoe UI", 10F);
 
             // Метка "Пароль"
             lblPassword = UIStyleHelper.CreateLabel("Пароль:");
-            lblPassword.Location = new Point(40, 180);
+            lblPassword.Location = new Point(0, 80);
 
             // Поле пароля
             txtPassword = UIStyleHelper.CreateTextBox();
-            txtPassword.Location = new Point(40, 205);
+            txtPassword.Location = new Point(0, 105);
             txtPassword.Size = new Size(300, 30);
             txtPassword.Font = new Font("Segoe UI", 10F);
             txtPassword.PasswordChar = '●';
@@ -100,14 +102,14 @@ namespace DispatchLogistics.Forms
             // Кнопка "Войти"
             btnLogin = new Button();
             btnLogin.Text = "Войти";
-            btnLogin.Location = new Point(40, 260);
+            btnLogin.Location = new Point(0, 160);
             btnLogin.Size = new Size(140, 38);
             UIStyleHelper.StyleButton(btnLogin, UIStyleHelper.PrimaryColor);
 
             // Кнопка "Выход"
             btnExit = new Button();
             btnExit.Text = "Выход";
-            btnExit.Location = new Point(200, 260);
+            btnExit.Location = new Point(160, 160);
             btnExit.Size = new Size(140, 38);
             UIStyleHelper.StyleButton(btnExit, Color.FromArgb(150, 150, 150));
 
@@ -117,7 +119,7 @@ namespace DispatchLogistics.Forms
             lblHint.Font = new Font("Segoe UI", 8F);
             lblHint.ForeColor = Color.FromArgb(150, 150, 150);
             lblHint.AutoSize = true;
-            lblHint.Location = new Point(40, 320);
+            lblHint.Location = new Point(0, 220);
 
             panelMain.Controls.Add(lblLogin);
             panelMain.Controls.Add(txtLogin);
@@ -127,6 +129,7 @@ namespace DispatchLogistics.Forms
             panelMain.Controls.Add(btnExit);
             panelMain.Controls.Add(lblHint);
 
+            // ===== Сборка формы =====
             this.Controls.Add(panelMain);
             this.Controls.Add(panelHeader);
 

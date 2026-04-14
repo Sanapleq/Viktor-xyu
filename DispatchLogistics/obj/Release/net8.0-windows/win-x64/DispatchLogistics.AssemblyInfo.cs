@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DispatchLogistics")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f8c8d5757227aa055494020e326dcadacbc77b7e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e80b2f2b23dc51b78ffc9dd4a330aa87c415a2d0")]
 [assembly: System.Reflection.AssemblyProductAttribute("DispatchLogistics")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DispatchLogistics")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
